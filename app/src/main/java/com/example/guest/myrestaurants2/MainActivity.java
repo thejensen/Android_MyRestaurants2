@@ -14,7 +14,7 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     @Bind(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
     @Bind(R.id.locationEditText) EditText mLocationEditText;
     @Bind(R.id.appNameTextView) TextView mAppNameTextView;
@@ -33,19 +33,20 @@ public class MainActivity extends AppCompatActivity {
         mAppNameTextView.setTypeface(pacificoFont);
 
 //        The setOnClickListener() method takes a new onClickListener as a parameter. Let’s use Tab Autocompletion to write this out. If we starting typing new View and then press Tab, the rest of the code will be filled in for us.
-        mFindRestaurantsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                We use the getText() method to grab the inputted value of our EditText and save it into a new String variable. The getText() method returns an editable data type so we have to convert it to a String using the toString() method.
-                String location = mLocationEditText.getText().toString();
-                Log.d(TAG, location);
+        mFindRestaurantsButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == mFindRestaurantsButton) {
+            //                We use the getText() method to grab the inputted value of our EditText and save it into a new String variable. The getText() method returns an editable data type so we have to convert it to a String using the toString() method.
+            String location = mLocationEditText.getText().toString();
+            Log.d(TAG, location);
 //                Here, we are constructing a new instance of the Intent class with the line Intent intent = new Intent(MainActivity.this, RestaurantsActivity.class);. As you can see this takes two parameters: The current context, and the Activity class we want to start.
-                Intent intent = new Intent(MainActivity.this, RestaurantsActivity2.class);
-                intent.putExtra("location", location);
-                startActivity(intent);
-            }
-        });
+            Intent intent = new Intent(MainActivity.this, RestaurantsActivity2.class);
+            intent.putExtra("location", location);
+            startActivity(intent);
 
-
+        }
     }
 }
