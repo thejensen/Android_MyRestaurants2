@@ -11,14 +11,14 @@ public class Restaurant {
     private String mName;
     private String mPhone;
     private String mWebsite;
-    private String mRating;
+    private double mRating;
     private String mImageUrl;
     private ArrayList<String> mAddress = new ArrayList<>();
     private double mLatitude;
     private double mLongitude;
     private ArrayList<String> mCategories = new ArrayList<>();
 
-    public Restaurant(String name, String phone, String website, doublt rating, String imageUrl, ArrayList<String> address, double latitude, double longitude, ArrayList<String> categories) {
+    public Restaurant(String name, String phone, String website, double rating, String imageUrl, ArrayList<String> address, double latitude, double longitude, ArrayList<String> categories) {
         this.mName = name;
         this.mPhone = phone;
         this.mWebsite = website;
