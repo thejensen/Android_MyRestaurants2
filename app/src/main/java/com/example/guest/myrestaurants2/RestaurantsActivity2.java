@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -23,12 +22,12 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class RestaurantsActivity2 extends AppCompatActivity {
-    public static final String TAG = RestaurantsActivity2.class.getSimpleName();
-
     @Bind(R.id.locationTextView) TextView mLocationTextView;
     @Bind(R.id.listView) ListView mListView;
-
+    private String[] restaurants = new String[] {"HUB", "Garden Bar", "Reel M Inn", "People's Pig", "Rabbits Cafe", "Bar Bar", "Slide Inn", "Nightlight", "The Florida Room", "Fresh Roll", "Eat", "Cruz Room", "Radio Room", "Santeria", "Sauce Box", "Shut Up and Eat", "A Real Taste of India (Foodcart)"};
+    public static final String TAG = RestaurantsActivity2.class.getSimpleName();
     public ArrayList<Restaurant> mRestaurants = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
