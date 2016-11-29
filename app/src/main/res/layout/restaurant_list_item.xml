@@ -8,7 +8,7 @@
         android:layout_width="130dp"
         android:layout_height="100dp"
         android:id="@+id/restaurantImageView"
-        android:src="@drawable/unsplash_527bf4b4ae00d_1"
+        android:src="@drawable/brunch"
         android:scaleType="centerCrop"/>
 
     <LinearLayout
