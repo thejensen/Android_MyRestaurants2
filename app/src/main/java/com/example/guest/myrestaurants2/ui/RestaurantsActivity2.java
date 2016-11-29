@@ -1,4 +1,4 @@
-package com.example.guest.myrestaurants2;
+package com.example.guest.myrestaurants2.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.guest.myrestaurants2.R;
+import com.example.guest.myrestaurants2.models.Restaurant;
+import com.example.guest.myrestaurants2.services.YelpService;
 
 import java.io.IOException;
 import java.util.ArrayList;
