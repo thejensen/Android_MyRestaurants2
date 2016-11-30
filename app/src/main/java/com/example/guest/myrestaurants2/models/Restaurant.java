@@ -30,7 +30,7 @@ public class Restaurant {
         this.mPhone = phone;
         this.mWebsite = website;
         this.mRating = rating;
-        this.mImageUrl = imageUrl;
+        this.mImageUrl = getLargeImageUrl(imageUrl);
         this.mAddress = address;
         this.mLatitude = latitude;
         this.mLongitude = longitude;
@@ -71,5 +71,12 @@ public class Restaurant {
 
     public ArrayList<String> getCategories() {
         return mCategories;
+    }
+
+//    Here, our new method getLargeImageUrl() simply replaces the last characters in the image's filepath with the characters that correspond to the higher-quality version. If we run the app again we'll notice the image quality is much, much better.
+//    Don't forget to resize your images, too!! in RestaurantDetailFragment
+    public String getLargeImageUrl(String imageUrl) {
+        String largeImageUrl = imageUrl.substring(0, imageUrl.length() - 6).concat("o.jpg");
+        return largeImageUrl;
     }
 }
