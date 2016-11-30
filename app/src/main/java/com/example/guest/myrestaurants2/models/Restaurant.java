@@ -9,6 +9,7 @@ import java.util.ArrayList;
  * Created by jensese on 11/28/16.
  */
 
+// to use Parcelor (to pass data between fragments by serializing and deserializing them), annotate the class with the @Parcel decorator.
 @Parcel
 public class Restaurant {
     private String mName;
@@ -20,6 +21,9 @@ public class Restaurant {
     private double mLatitude;
     private double mLongitude;
     private ArrayList<String> mCategories = new ArrayList<>();
+
+//    to use Parcelor, create a public constructor with no arguments for the Parcelor annotation library.
+    public Restaurant() {}
 
     public Restaurant(String name, String phone, String website, double rating, String imageUrl, ArrayList<String> address, double latitude, double longitude, ArrayList<String> categories) {
         this.mName = name;
