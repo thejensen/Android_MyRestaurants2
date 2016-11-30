@@ -28,7 +28,7 @@ public class MainActivityInstrumentationTest {
         onView(withId(R.id.locationEditText)).perform(typeText("Portland")).check(matches(withText("Portland")));
     }
 
-//    check if the location entered into our form is successfully being passed to our RestaurantsActivity with the intent extra we just recently created.
+//    check if the location entered into our form is successfully being passed to our RestaurantListActivity with the intent extra we just recently created.
     @Test
         public void locationIsSentToRestaurantsActivity() {
         String location = "Portland";
