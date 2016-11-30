@@ -1,5 +1,7 @@
 package com.example.guest.myrestaurants2.models;
 
+import org.parceler.Parcel;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -7,6 +9,7 @@ import java.util.ArrayList;
  * Created by jensese on 11/28/16.
  */
 
+@Parcel
 public class Restaurant {
     private String mName;
     private String mPhone;

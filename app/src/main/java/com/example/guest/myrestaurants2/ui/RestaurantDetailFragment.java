@@ -6,25 +6,60 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.guest.myrestaurants2.R;
+import com.example.guest.myrestaurants2.models.Restaurant;
+import com.squareup.picasso.Picasso;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+import org.parceler.Parcels;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class RestaurantDetailFragment extends Fragment {
+    @Bind(R.id.restaurantImageView) ImageView mImageLabel;
+    @Bind(R.id.restaurantNameTextView) TextView mNameLabel;
+    @Bind(R.id.cuisineTextView) TextView mCategoriesLabel;
+    @Bind(R.id.ratingTextView) TextView mRatingLabel;
+    @Bind(R.id.websiteTextView) TextView mWebsiteLabel;
+    @Bind(R.id.phoneTextView) TextView mPhoneLabel;
+    @Bind(R.id.addressTextView) TextView mAddressLabel;
+    @Bind(R.id.saveRestaurantButton) TextView mSaveRestaurantButton;
 
+    private Restaurant mRestaurant;
 
-    public RestaurantDetailFragment() {
-        // Required empty public constructor
+//    This method is used instead of a constructor and returns a new instance of RestaurantDetailFragment. The Parcelor library adds the Restaurant object to a bundle and set the bundle as the argument for our new RestaurantDetail Fragment. This allows us to access necessary data when a new instance of our fragment is created.
+    public static RestaurantDetailFragment newInstance(Restaurant restaurant) {
+        RestaurantDetailFragment restaurantDetailFragment = new RestaurantDetailFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("restaurant", Parcels.wrap(restaurant));
+        restaurantDetailFragment.setArguments(args);
+        return restaurantDetailFragment;
     }
 
-
+//    onCreate is called when the fragment is created. We unwrap our restaurant object from the arguments we added in the newInstance method.
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_restaurant_detail, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mRestaurant = Parcels.unwrap(getArguments().getParcelable("restaurant"));
     }
 
+//    the restaurant object is used to set our ImageView and TextViews.
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_restaurant_detail, container, false);
+        ButterKnife.bind(this, view);
+
+        Picasso.with(view.getContext()).load(mRestaurant.getImageUrl()).into(mImageLabel);
+
+        mNameLabel.setText(mRestaurant.getName());
+        mCategoriesLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getCategories()));
+        mRatingLabel.setText(Double.toString(mRestaurant.getRating()) + "/5");
+        mPhoneLabel.setText(mRestaurant.getPhone());
+        mAddressLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getAddress()));
+
+        return view;
+    }
 }
