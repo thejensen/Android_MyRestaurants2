@@ -12,15 +12,15 @@ import java.util.ArrayList;
 // to use Parcelor (to pass data between fragments by serializing and deserializing them), annotate the class with the @Parcel decorator.
 @Parcel
 public class Restaurant {
-    private String mName;
-    private String mPhone;
-    private String mWebsite;
-    private double mRating;
-    private String mImageUrl;
-    private ArrayList<String> mAddress = new ArrayList<>();
-    private double mLatitude;
-    private double mLongitude;
-    private ArrayList<String> mCategories = new ArrayList<>();
+    String mName;
+    String mPhone;
+    String mWebsite;
+    double mRating;
+    String mImageUrl;
+    ArrayList<String> mAddress = new ArrayList<>();
+    double mLatitude;
+    double mLongitude;
+    ArrayList<String> mCategories = new ArrayList<>();
 
 //    to use Parcelor, create a public constructor with no arguments for the Parcelor annotation library.
     public Restaurant() {}

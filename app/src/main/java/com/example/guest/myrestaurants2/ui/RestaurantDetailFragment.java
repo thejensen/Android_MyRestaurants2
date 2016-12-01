@@ -1,6 +1,8 @@
 package com.example.guest.myrestaurants2.ui;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,7 +20,7 @@ import org.parceler.Parcels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RestaurantDetailFragment extends Fragment {
+public class RestaurantDetailFragment extends Fragment implements View.OnClickListener {
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 300;
     @Bind(R.id.restaurantImageView) ImageView mImageLabel;
@@ -67,6 +69,30 @@ public class RestaurantDetailFragment extends Fragment {
         mPhoneLabel.setText(mRestaurant.getPhone());
         mAddressLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getAddress()));
 
+        mWebsiteLabel.setOnClickListener(this);
+        mPhoneLabel.setOnClickListener(this);
+        mAddressLabel.setOnClickListener(this);
+
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+//        if mWebsiteLabel is clicked, we create a new implicit intent called webIntent and provide it two arguments: The ACTION_VIEW activity, responsible for displaying data to the user, and the restaurant's website URL. We start this new activity by calling startActivity().
+        if (v == mWebsiteLabel) {
+            Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mRestaurant.getWebsite()));
+            startActivity(webIntent);
+        }
+//        If mPhoneLabel is clicked, we create an implicit intent called phoneIntent, and provide it two arguments: The ACTION_DIAL activity, which dials the number in the user's phone app, and the restaurant's telephone number. Again, we start this activity by calling startActivity().
+        if (v == mPhoneLabel) {
+            Intent phoneIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + mRestaurant.getPhone()));
+            startActivity(phoneIntent);
+        }
+//        If mAddressLabel is selected, we create an implicit intent called mapIntent, and provide it two arguments: The ACTION_VIEW activity, and the restaurant's longitude and latitude, and begin the activity with startActivity().
+//        ?q=(" + mRestaurant.getName() + ")" creates a marker on the map with a label of the restaurant’s name.
+        if (v == mAddressLabel) {
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + mRestaurant.getLatitude() + "," + mRestaurant.getLongitude() + "?q=(" + mRestaurant.getName() + ")"));
+            startActivity(mapIntent);
+        }
     }
 }
