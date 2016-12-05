@@ -25,8 +25,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class RestaurantListActivity extends AppCompatActivity {
-    private SharedPreferences mSharedPreferences;
-    private String mRecentAddress;
+//    private SharedPreferences mSharedPreferences;
+//    private String mRecentAddress;
 
     public static final String TAG = RestaurantListActivity.class.getSimpleName();
     public ArrayList<Restaurant> mRestaurants = new ArrayList<>();
@@ -45,13 +45,15 @@ public class RestaurantListActivity extends AppCompatActivity {
 //        and the getStringExtra() method to pull out the location value based using the string key we provided:
         String location = intent.getStringExtra("location");
 
-//        we retrieve our shared preferences from the preference manager, pull data from it by calling getString() and providing the key that corresponds to the data we'd like to retrieve. We also pass in the default valuenull. The default value will be returned if the getString() method is unable to find a value that corresponds to the key we provided.
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mRecentAddress = mSharedPreferences.getString(Constants.PREFERENCES_LOCATION_KEY, null);
+        getRestaurants(location);
 
-        if (mRecentAddress != null) {
-            getRestaurants(mRecentAddress);
-        }
+//        we retrieve our shared preferences from the preference manager, pull data from it by calling getString() and providing the key that corresponds to the data we'd like to retrieve. We also pass in the default valuenull. The default value will be returned if the getString() method is unable to find a value that corresponds to the key we provided.
+//        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        mRecentAddress = mSharedPreferences.getString(Constants.PREFERENCES_LOCATION_KEY, null);
+//
+//        if (mRecentAddress != null) {
+//            getRestaurants(mRecentAddress);
+//        }
     }
 
     private void getRestaurants (String location) {
