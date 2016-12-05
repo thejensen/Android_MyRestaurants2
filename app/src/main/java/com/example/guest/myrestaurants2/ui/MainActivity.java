@@ -14,8 +14,11 @@ import android.widget.TextView;
 
 import com.example.guest.myrestaurants2.Constants;
 import com.example.guest.myrestaurants2.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    private SharedPreferences.Editor mEditor;
 
     private DatabaseReference mSearchedLocationReference;
+    private ValueEventListener mSearchedLocationReferenceListener;
 
     @Bind(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
     @Bind(R.id.locationEditText) EditText mLocationEditText;
@@ -40,6 +44,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getInstance()
                 .getReference()
                 .child(Constants.FIREBASE_CHILD_SEARCHED_LOCATION);
+
+//        we call addValueEventListener() on our mSearchedLocationReference object to attach a new ValueEventListener (which we provide as a parameter).
+//        ValueEventListeners have two methods that must be overridden; onDataChange() and onCancelled():
+//        onDataChange() is called whenever data at the specified node changes. Such as adding a new zip code. It will return a dataSnapshot object, which is essentially a read-only copy of the Firebase state.
+//        onCancelled() is called if the listener is unsuccessful for any reason. We won't add any code here right now.
+//        In our onDataChange method we'll snag the values returned in the dataSnapshot, loop through each of the children with the getChildren() method, and print their values to the logcat. Other methods we can call on a dataSnapshot include .child() and .getKey().
+        mSearchedLocationReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
+                    String location = locationSnapshot.getValue().toString();
+//                    logs all locations saved in database!
+                    Log.d("Locations updated", "location: " + location);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 //        super.onCreate(savedInstanceState); causes Android to run all of the default behaviors for an activity. It's very rare that you would change this line.
         super.onCreate(savedInstanceState);
@@ -89,4 +114,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    private void addToSharedPreferences(String location) {
 //        mEditor.putString(Constants.PREFERENCES_LOCATION_KEY, location).apply();
 //    }
+
+//    remove our listener when the user quits interacting with the activity. Without doing this, the app listens for database changes indefinitely causing battery life to suffer and memory leaks.
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSearchedLocationReference.removeEventListener(mSearchedLocationReferenceListener);
+    }
 }
