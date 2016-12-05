@@ -4,6 +4,7 @@ import org.parceler.Parcel;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jensese on 11/28/16.
@@ -12,65 +13,65 @@ import java.util.ArrayList;
 // to use Parcelor (to pass data between fragments by serializing and deserializing them), annotate the class with the @Parcel decorator.
 @Parcel
 public class Restaurant {
-    String mName;
-    String mPhone;
-    String mWebsite;
-    double mRating;
-    String mImageUrl;
-    ArrayList<String> mAddress = new ArrayList<>();
-    double mLatitude;
-    double mLongitude;
-    ArrayList<String> mCategories = new ArrayList<>();
+    String Name;
+    String Phone;
+    String Website;
+    double Rating;
+    String ImageUrl;
+    List<String> Address = new ArrayList<>();
+    double Latitude;
+    double Longitude;
+    List<String> Categories = new ArrayList<>();
 
 //    to use Parcelor, create a public constructor with no arguments for the Parcelor annotation library.
     public Restaurant() {}
 
     public Restaurant(String name, String phone, String website, double rating, String imageUrl, ArrayList<String> address, double latitude, double longitude, ArrayList<String> categories) {
-        this.mName = name;
-        this.mPhone = phone;
-        this.mWebsite = website;
-        this.mRating = rating;
-        this.mImageUrl = getLargeImageUrl(imageUrl);
-        this.mAddress = address;
-        this.mLatitude = latitude;
-        this.mLongitude = longitude;
-        this.mCategories = categories;
+        this.Name = name;
+        this.Phone = phone;
+        this.Website = website;
+        this.Rating = rating;
+        this.ImageUrl = getLargeImageUrl(imageUrl);
+        this.Address = address;
+        this.Latitude = latitude;
+        this.Longitude = longitude;
+        this.Categories = categories;
     }
 
     public String getName() {
-        return mName;
+        return Name;
     }
 
     public String getPhone() {
-        return mPhone;
+        return Phone;
     }
 
     public String getWebsite() {
-        return  mWebsite;
+        return Website;
     }
 
     public double getRating() {
-        return mRating;
+        return Rating;
     }
 
     public String getImageUrl(){
-        return mImageUrl;
+        return ImageUrl;
     }
 
-    public ArrayList<String> getAddress() {
-        return mAddress;
+    public List<String> getAddress() {
+        return Address;
     }
 
     public double getLatitude() {
-        return mLatitude;
+        return Latitude;
     }
 
     public double getLongitude() {
-        return mLongitude;
+        return Longitude;
     }
 
-    public ArrayList<String> getCategories() {
-        return mCategories;
+    public List<String> getCategories() {
+        return Categories;
     }
 
 //    Here, our new method getLargeImageUrl() simply replaces the last characters in the image's filepath with the characters that correspond to the higher-quality version. If we run the app again we'll notice the image quality is much, much better.
