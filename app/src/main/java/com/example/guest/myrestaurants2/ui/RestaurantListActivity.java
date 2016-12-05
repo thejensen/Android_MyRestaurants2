@@ -1,11 +1,15 @@
 package com.example.guest.myrestaurants2.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
+import com.example.guest.myrestaurants2.Constants;
 import com.example.guest.myrestaurants2.R;
 import com.example.guest.myrestaurants2.adapters.RestaurantListAdapter;
 import com.example.guest.myrestaurants2.models.Restaurant;
@@ -21,6 +25,9 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class RestaurantListActivity extends AppCompatActivity {
+    private SharedPreferences mSharedPreferences;
+    private String mRecentAddress;
+
     public static final String TAG = RestaurantListActivity.class.getSimpleName();
     public ArrayList<Restaurant> mRestaurants = new ArrayList<>();
 
@@ -39,6 +46,11 @@ public class RestaurantListActivity extends AppCompatActivity {
         String location = intent.getStringExtra("location");
 
         getRestaurants(location);
+
+//        we retrieve our shared preferences from the preference manager, pull data from it by calling getString() and providing the key that corresponds to the data we'd like to retrieve. We also pass in the default valuenull. The default value will be returned if the getString() method is unable to find a value that corresponds to the key we provided.
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mRecentAddress = mSharedPreferences.getString(Constants.PREFERENCES_LOCATION_KEY, null);
+        Log.d("Shared pref location ", mRecentAddress);
     }
 
     private void getRestaurants (String location) {
