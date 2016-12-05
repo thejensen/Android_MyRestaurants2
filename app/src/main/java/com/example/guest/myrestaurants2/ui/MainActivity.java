@@ -51,12 +51,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v == mFindRestaurantsButton) {
-            //                We use the getText() method to grab the inputted value of our EditText and save it into a new String variable. The getText() method returns an editable data type so we have to convert it to a String using the toString() method.
+//                We use the getText() method to grab the inputted value of our EditText and save it into a new String variable. The getText() method returns an editable data type so we have to convert it to a String using the toString() method.
             String location = mLocationEditText.getText().toString();
             Log.d(TAG, location);
 
-//takes the user-inputted zip code as an argument, and calls upon the editor to write this information to shared preferences. Since shared preference data must be in key-value pairs, we provide the editor the key we've stored in our Constants file called PREFERENCES_LOCATION_KEY, and the zip code value we've passed in as an argument, location. Finally, we call apply() to save this information.
-            addToSharedPreferences(location);
+            if(!(location).equals("")) {
+//                takes the user-inputted zip code as an argument, and calls upon the editor to write this information to shared preferences. Since shared preference data must be in key-value pairs, we provide the editor the key we've stored in our Constants file called PREFERENCES_LOCATION_KEY, and the zip code value we've passed in as an argument, location. Finally, we call apply() to save this information.
+                addToSharedPreferences(location);
+            }
 
 //                Here, we are constructing a new instance of the Intent class with the line Intent intent = new Intent(MainActivity.this, RestaurantListActivity.class);. As you can see this takes two parameters: The current context, and the Activity class we want to start.
             Intent intent = new Intent(MainActivity.this, RestaurantListActivity.class);
