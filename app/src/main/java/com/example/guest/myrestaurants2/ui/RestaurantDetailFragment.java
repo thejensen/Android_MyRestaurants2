@@ -10,9 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.guest.myrestaurants2.Constants;
 import com.example.guest.myrestaurants2.R;
 import com.example.guest.myrestaurants2.models.Restaurant;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
@@ -73,6 +77,8 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         mPhoneLabel.setOnClickListener(this);
         mAddressLabel.setOnClickListener(this);
 
+        mSaveRestaurantButton.setOnClickListener(this);
+
         return view;
     }
 
@@ -93,6 +99,16 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         if (v == mAddressLabel) {
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + mRestaurant.getLatitude() + "," + mRestaurant.getLongitude() + "?q=(" + mRestaurant.getName() + ")"));
             startActivity(mapIntent);
+        }
+//        In the conditional, we create a new DatabaseReference object called restaurantRef using the getInstance() and getReference() methods, passing in the key for our restaurants node.
+//        Then, we call push() and setValue() , passing in our restaurant object as an argument, to create a node for the selected restaurant with a unique push id.
+//        Finally, we display a brief toast to confirm the restaurant has been saved.
+        if (v == mSaveRestaurantButton) {
+            DatabaseReference restaurantRef = FirebaseDatabase
+                    .getInstance()
+                    .getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
+            restaurantRef.push().setValue(mRestaurant);
+            Toast.makeText(getContext(), "Saved", Toast.LENGTH_SHORT).show();
         }
     }
 }
