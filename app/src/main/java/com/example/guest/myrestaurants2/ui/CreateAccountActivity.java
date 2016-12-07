@@ -1,10 +1,12 @@
 package com.example.guest.myrestaurants2.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,6 +41,8 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private ProgressDialog mAuthProgressDialog;
+    private String mName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
         mAuth = FirebaseAuth.getInstance();
         createAuthStateListener();
+        createAuthProgressDialog();
 
         mLoginTextView.setOnClickListener(this);
         mCreateUserButton.setOnClickListener(this);
@@ -86,18 +92,33 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     }
 
     private void createNewUser() {
-        final String name = mNameEditText.getText().toString().trim();
+        mName = mNameEditText.getText().toString().trim();
+//        final String name = mNameEditText.getText().toString().trim();
         final String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
         String confirmPassword = mConfirmPasswordEditText.getText().toString().trim();
 
+        boolean validEmail = isValidEmail(email);
+        boolean validName = isValidName(mName);
+        boolean validPassword = isValidPassword(password, confirmPassword);
+        if(!validEmail || !validName || !validPassword) return;
+
+//        Finally, we show the ProgressDialog in our createNewUser() method with the line mAuthProgressDialog.show();. Notice that this line is only called after the form validation methods have returned true.
+        mAuthProgressDialog.show();
+
+//        createUserWithEmailAndPassword() method is complete (no matter what the outcome is), we dismiss the dialog entirely with the line mAuthProgressDialog.dismiss(); so that the user may either continue using the app, or view any error messages.
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
+                mAuthProgressDialog.dismiss();
+
                 if (task.isSuccessful()) {
                     Log.d(TAG, "Authentication successful");
+//                    The result of this task (now represents create account activity + main activity and its transition and account information) is the user's create account info inputs
+//                    To pass the user object to our createFirebaseUserProfile() method, we can grab the result from the Task object returned in onComplete(). We may then retrieve the specific user by calling Firebase's getUser() method.
+                    createFirebaseUserProfile(task.getResult().getUser());
                 } else {
                     Toast.makeText(CreateAccountActivity.this, "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
@@ -128,6 +149,63 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                 }
             }
         };
+    }
+
+    private boolean isValidEmail(String email) {
+        boolean isGoodEmail = (email != null && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        if(!isGoodEmail) {
+            mEmailEditText.setError("Please enter a valid email address");
+            return false;
+        }
+        return isGoodEmail;
+    }
+
+    private boolean isValidName(String name) {
+        if(name.equals("")) {
+            mNameEditText.setError("Please enter your name");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidPassword(String password, String confirmPassword) {
+        if(password.length() < 6) {
+            mPasswordEditText.setError("Please create a password containing at least 6 characters");
+            return false;
+        } else if(!password.equals(confirmPassword)) {
+            mPasswordEditText.setError("Passwords do not match!");
+            return false;
+        }
+        return true;
+    }
+
+//    set the title and message values of the dialog box, and setCancelable() to false so that users cannot close the dialog manually. (We want this dialog box to remain in sight until the account is either successfully authenticated, or we have errors to display to the user).
+    private void createAuthProgressDialog() {
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle("Loading...");
+        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+        mAuthProgressDialog.setCancelable(false);
+    }
+
+    private void createFirebaseUserProfile(final FirebaseUser user) {
+
+//To set the name, we first need to build a new UserProfileChangeRequest object. This is a Firebase object used to request updates to user profile information.
+        UserProfileChangeRequest addProfileName = new UserProfileChangeRequest.Builder()
+//                We call the setDisplayName() method to attach the user-entered name to the user's profile.
+                .setDisplayName(mName)
+                .build();
+
+//        We then pass this UserProfileChangeRequest object into the updateProfile() method and attach an OnCompleteListener.
+                user.updateProfile(addProfileName)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    trigger the onComplete() method when the request is finished processing. If the request was successful, we log the name to the logcat.
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, user.getDisplayName());
+                        }
+                    }
+                });
     }
 
 }
