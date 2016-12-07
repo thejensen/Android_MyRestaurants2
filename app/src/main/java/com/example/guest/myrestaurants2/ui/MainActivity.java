@@ -26,14 +26,13 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 //    Here, we begin by creating member variables to store reference to the shared preferences tool itself (mSharedPreferences) and the dedicated tool we must use to edit them (mEditor).
-//    private SharedPreferences mSharedPreferences;
-//    private SharedPreferences.Editor mEditor;
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
 
     private DatabaseReference mSearchedLocationReference;
     private ValueEventListener mSearchedLocationReferenceListener;
 
     @Bind(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
-    @Bind(R.id.locationEditText) EditText mLocationEditText;
     @Bind(R.id.appNameTextView) TextView mAppNameTextView;
     @Bind(R.id.savedRestaurantsButton) Button mSavedRestaurantsButton;
 
@@ -75,8 +74,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-//        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        mEditor = mSharedPreferences.edit();
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mSharedPreferences.edit();
 
         Typeface pacificoFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
         mAppNameTextView.setTypeface(pacificoFont);
@@ -90,20 +89,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v == mFindRestaurantsButton) {
-//                We use the getText() method to grab the inputted value of our EditText and save it into a new String variable. The getText() method returns an editable data type so we have to convert it to a String using the toString() method.
-            String location = mLocationEditText.getText().toString();
-            Log.d(TAG, location);
-
-            saveLocationToFirebase(location);
-
-//            if(!(location).equals("")) {
-////                takes the user-inputted zip code as an argument, and calls upon the editor to write this information to shared preferences. Since shared preference data must be in key-value pairs, we provide the editor the key we've stored in our Constants file called PREFERENCES_LOCATION_KEY, and the zip code value we've passed in as an argument, location. Finally, we call apply() to save this information.
-//                addToSharedPreferences(location);
-//            }
-
 //                Here, we are constructing a new instance of the Intent class with the line Intent intent = new Intent(MainActivity.this, RestaurantListActivity.class);. As you can see this takes two parameters: The current context, and the Activity class we want to start.
             Intent intent = new Intent(MainActivity.this, RestaurantListActivity.class);
-            intent.putExtra("location", location);
             startActivity(intent);
         }
         if (v == mSavedRestaurantsButton) {
@@ -118,9 +105,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSearchedLocationReference.push().setValue(location);
     }
 
-//    private void addToSharedPreferences(String location) {
-//        mEditor.putString(Constants.PREFERENCES_LOCATION_KEY, location).apply();
-//    }
+    private void addToSharedPreferences(String location) {
+        mEditor.putString(Constants.PREFERENCES_LOCATION_KEY, location).apply();
+    }
 
 //    remove our listener when the user quits interacting with the activity. Without doing this, the app listens for database changes indefinitely causing battery life to suffer and memory leaks.
     @Override
