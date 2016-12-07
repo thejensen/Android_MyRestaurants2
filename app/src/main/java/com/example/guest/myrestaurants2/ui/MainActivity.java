@@ -25,10 +25,6 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-//    Here, we begin by creating member variables to store reference to the shared preferences tool itself (mSharedPreferences) and the dedicated tool we must use to edit them (mEditor).
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
-
     private DatabaseReference mSearchedLocationReference;
     private ValueEventListener mSearchedLocationReferenceListener;
 
@@ -51,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        onDataChange() is called whenever data at the specified node changes. Such as adding a new zip code. It will return a dataSnapshot object, which is essentially a read-only copy of the Firebase state.
 //        onCancelled() is called if the listener is unsuccessful for any reason. We won't add any code here right now.
 //        In our onDataChange method we'll snag the values returned in the dataSnapshot, loop through each of the children with the getChildren() method, and print their values to the logcat. Other methods we can call on a dataSnapshot include .child() and .getKey().
-        mSearchedLocationReference.addValueEventListener(new ValueEventListener() {
+        mSearchedLocationReferenceListener = mSearchedLocationReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
@@ -73,9 +69,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        R.layout.activity_main tells Android to use the main_activity.xml layout for this activity. R - which is short for Resources - gives us a way to access all of our files in the res directory.
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mEditor = mSharedPreferences.edit();
 
         Typeface pacificoFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
         mAppNameTextView.setTypeface(pacificoFont);
@@ -103,10 +96,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    .push() will ensure each new entry is added to the node under a unique, randomly generated id called a push id:
     private void saveLocationToFirebase(String location) {
         mSearchedLocationReference.push().setValue(location);
-    }
-
-    private void addToSharedPreferences(String location) {
-        mEditor.putString(Constants.PREFERENCES_LOCATION_KEY, location).apply();
     }
 
 //    remove our listener when the user quits interacting with the activity. Without doing this, the app listens for database changes indefinitely causing battery life to suffer and memory leaks.

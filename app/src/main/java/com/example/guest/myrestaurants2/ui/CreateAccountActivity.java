@@ -53,12 +53,14 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         mCreateUserButton.setOnClickListener(this);
     }
 
+//    The system calls the onStart() method every time your activity becomes visible (whether it's being restarted or created for the first time).
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
 
+//    Android calls onStop() when an activity is no longer visible. Once the activity is stopped, the system might destroy the instance if it needs to recover system memory. In extreme cases, the system might simply kill your app process without calling the activity's final onDestroy() callback. This is why it is important to use onStop() to release resources that might leak memory.
     @Override
     public void onStop() {
         super.onStop();
@@ -107,11 +109,18 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     }
 
     private void createAuthStateListener() {
+//        create new AuthStateListener by setting our member variable to the FirebaseAuth.AuthStateListener interface.
         mAuthListener = new FirebaseAuth.AuthStateListener() {
+
+//            This interface listens to changes in the current AuthState. When there is a change (ie. a user becomes authenticated or signs out), this interface triggers the onAuthStateChanged() method.
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                The onAuthStateChanged() method returns FirebaseAuth data. Using this data, we can create a FirebaseUser by calling the getCurrentUser() method. We double-check that this user is not null before traveling to the MainActivity.
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    Log.v(TAG, "user: " + user.getEmail());
+                    Toast.makeText(CreateAccountActivity.this, "You're already logged in!",
+                            Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
