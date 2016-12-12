@@ -36,7 +36,7 @@ public class SavedRestaurantListActivity extends AppCompatActivity {
         setUpFirebaseAdapter();
     }
 
-// We then create a method to set up the FirebaseAdapter which takes the model class, the list item layout, the view holder, and the database reference as parameters.
+// We then create a method to set up the FirebaseAdapter which takes the model class, the list item layout OF THE DRAGGABLE KIND ;), the view holder, and the database reference as parameters.
 
     private void setUpFirebaseAdapter() {
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder>
