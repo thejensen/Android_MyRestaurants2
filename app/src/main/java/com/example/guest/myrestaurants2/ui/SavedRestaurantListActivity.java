@@ -40,7 +40,7 @@ public class SavedRestaurantListActivity extends AppCompatActivity {
 
     private void setUpFirebaseAdapter() {
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder>
-                (Restaurant.class, R.layout.restaurant_list_item, FirebaseRestaurantViewHolder.class,
+                (Restaurant.class, R.layout.restaurant_list_item_drag, FirebaseRestaurantViewHolder.class,
                         mRestaurantReference) {
 
 // Inside of the populateViewHolder() method, we call the bindRestaurant() method on our viewHolder to set the appropriate text and image with the given restaurant.
