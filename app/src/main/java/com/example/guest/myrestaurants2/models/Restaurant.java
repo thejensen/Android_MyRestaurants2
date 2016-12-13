@@ -21,6 +21,7 @@ public class Restaurant {
     double latitude;
     double longitude;
     List<String> categories = new ArrayList<>();
+    String pushId;
 
 //    to use Parcelor, create a public constructor with no arguments for the Parcelor annotation library.
     public Restaurant() {}
@@ -78,5 +79,9 @@ public class Restaurant {
     public String getLargeImageUrl(String imageUrl) {
         String largeImageUrl = imageUrl.substring(0, imageUrl.length() - 6).concat("o.jpg");
         return largeImageUrl;
+    }
+
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
     }
 }
