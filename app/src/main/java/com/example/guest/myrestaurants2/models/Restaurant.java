@@ -22,8 +22,9 @@ public class Restaurant {
     double longitude;
     List<String> categories = new ArrayList<>();
     String pushId;
+    String index;
 
-//    to use Parcelor, create a public constructor with no arguments for the Parcelor annotation library.
+    //    to use Parcelor, create a public constructor with no arguments for the Parcelor annotation library.
     public Restaurant() {}
 
     public Restaurant(String name, String phone, String website, double rating, String imageUrl, ArrayList<String> address, double latitude, double longitude, ArrayList<String> categories) {
@@ -36,6 +37,7 @@ public class Restaurant {
         this.latitude = latitude;
         this.longitude = longitude;
         this.categories = categories;
+        this.index = "not_specified";
     }
 
     public String getName() {
@@ -83,5 +85,15 @@ public class Restaurant {
 
     public void setPushId(String pushId) {
         this.pushId = pushId;
+    }
+
+
+//    Instead of int, we give each restaurant a string index so that we may set the initial value to a string key in our object constructor. Alphabetically, numbers come before letters. So anytime we add a brand new restaurant to our list, it will receive the default string index value. Then, when we re-order our restaurants with our new drag-and-drop feature, we will overwrite this string index with a numerical index. So, any ordered restaurants will come in their numerical order, and new restaurants we add will automatically be added to the end of the list.
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
     }
 }

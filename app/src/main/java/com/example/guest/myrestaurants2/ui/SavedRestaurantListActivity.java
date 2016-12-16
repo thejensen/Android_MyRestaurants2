@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,37 +33,28 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 // We then pass in the activity_restaurants layout into the setContentView() method to display the correct layout.
         setContentView(R.layout.activity_restaurants2);
         ButterKnife.bind(this);
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = user.getUid();
-
-// Next, we set the mRestaurantReference using the "restaurants" child node key from our Constants class.
-        mRestaurantReference = FirebaseDatabase
-                .getInstance()
-                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                .child(uid);
 
         setUpFirebaseAdapter();
     }
 
 // We then create a method to set up the FirebaseAdapter which takes the model class, the list item layout OF THE DRAGGABLE KIND ;), the view holder, and the database reference as parameters.
-
     private void setUpFirebaseAdapter() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
 
-        mRestaurantReference = FirebaseDatabase
+//        Next, we will use the orderByChild() method to instruct the FirebaseRecyclerAdapter to return the Restaurant objects by index rather than by the order in which they appear in the database. To do this, we will need to create a Query object using the FirebaseDatabase and DatabaseReference (the FirebaseArrayAdapter accepts either a DatabaseReference or a Query). We will then pass this query into our FirebaseRestaurantListAdapter constructor in place of the DatabaseReference object:
+        Query query = FirebaseDatabase
                 .getInstance()
                 .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                .child(uid);
+                .child(uid)
+                .orderByChild(Constants.FIREBASE_QUERY_INDEX);
 
         mFirebaseAdapter = new FirebaseRestaurantListAdapter(Restaurant.class,
                 R.layout.restaurant_list_item_drag, FirebaseRestaurantViewHolder.class,
-                mRestaurantReference, this, this);
+                query, this, this);
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -79,6 +71,7 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
     @Override
     protected void onDestroy() {
         super.onDestroy();
+//        We already added the code to call cleanup() in our SavedRestaurantListActivity, but make sure to trigger this method in all future projects:
         mFirebaseAdapter.cleanup();
     }
 

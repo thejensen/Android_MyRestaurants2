@@ -9,8 +9,13 @@ import com.example.guest.myrestaurants2.models.Restaurant;
 import com.example.guest.myrestaurants2.util.ItemTouchHelperAdapter;
 import com.example.guest.myrestaurants2.util.OnStartDragListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+
+import java.util.ArrayList;
 
 /**
  * Created by Guest on 12/12/16.
@@ -24,6 +29,8 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Resta
     private DatabaseReference mRef;
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
+    private ChildEventListener mChildEventListener;
+    private ArrayList<Restaurant> mRestaurants = new ArrayList<>();
 
     //    We also add the OnStartDragListener and the context to the constructor. The context will be needed when we eventually create an intent to navigate to the detail activity.
     public FirebaseRestaurantListAdapter(Class<Restaurant> modelClass, int modelLayout, Class<FirebaseRestaurantViewHolder> viewHolderClass, Query ref, OnStartDragListener onStartDragListener, Context context) {
@@ -33,6 +40,35 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Resta
 //        We will eventually set a TouchListener on the restaurant ImageView and use the OnStartDragListener to trigger to onStartDrag() callback.
         mOnStartDragListener = onStartDragListener;
         mContext = context;
+
+        mChildEventListener = mRef.addChildEventListener(new ChildEventListener() {
+//            Each time the adapter is constructed, the onChildAdded() will be triggered for each item in the given reference.
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                We will use the add() method to add each returned item to the mRestaurants ArrayList so that we can access the list of restaurants throughout our adapter.
+                mRestaurants.add(dataSnapshot.getValue(Restaurant.class));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 //    populateViewHolder() comes from an interface included as part of the FirebaseRecyclerAdapter class.
