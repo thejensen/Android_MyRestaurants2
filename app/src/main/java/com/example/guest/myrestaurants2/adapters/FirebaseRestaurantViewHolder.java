@@ -2,12 +2,14 @@ package com.example.guest.myrestaurants2.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.guest.myrestaurants2.R;
 import com.example.guest.myrestaurants2.models.Restaurant;
+import com.example.guest.myrestaurants2.util.ItemTouchHelperViewHolder;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -15,7 +17,7 @@ import com.squareup.picasso.Picasso;
  */
 
 // We also implement the View.OnClickListener interface and set the click listener on our itemView.
-public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder {
+public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
 // Just like in our RestaurantViewHolder, we add static variables to hold the width and height of our images for Picasso.
     private static final int MAX_WIDTH = 200;
     private static final int MAX_HEIGHT = 200;
@@ -51,5 +53,17 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder {
         nameTextView.setText(restaurant.getName());
         categoryTextView.setText(restaurant.getCategories().get(0));
         ratingTextView.setText("Rating: " + restaurant.getRating() + "/5");
+    }
+
+    @Override
+    public void onItemSelected() {
+        Log.d("Animation", "onItemSelected");
+
+    }
+
+    @Override
+    public void onItemClear() {
+        Log.d("Animation", "onItemClear");
+
     }
 }
