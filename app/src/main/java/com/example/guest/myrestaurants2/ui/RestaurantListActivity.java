@@ -30,13 +30,14 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class RestaurantListActivity extends AppCompatActivity {
+    public static final String TAG = RestaurantListActivity.class.getSimpleName();
+
     private SharedPreferences mSharedPreferences;
 //    Now that users will be able to search a new zip code here in our RestaurantListActivity, we'll need access to the Editor to stash this new zip code in SharedPreferences
     private SharedPreferences.Editor mEditor;
     private String mRecentAddress;
 
 
-    public static final String TAG = RestaurantListActivity.class.getSimpleName();
     public ArrayList<Restaurant> mRestaurants = new ArrayList<>();
 
     @Bind(R.id.recyclerView) RecyclerView mRecyclerView;
@@ -60,6 +61,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         mRecentAddress = mSharedPreferences.getString(Constants.PREFERENCES_LOCATION_KEY, null);
 
         if (mRecentAddress != null) {
+            Log.v(TAG, "Recent address" + mRecentAddress);
             getRestaurants(mRecentAddress);
         }
     }

@@ -1,6 +1,8 @@
 package com.example.guest.myrestaurants2.services;
 
 
+import android.util.Log;
+
 import com.example.guest.myrestaurants2.Constants;
 import com.example.guest.myrestaurants2.models.Restaurant;
 
@@ -9,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import okhttp3.Call;
@@ -26,6 +27,8 @@ import se.akerfeldt.okhttp.signpost.SigningInterceptor;
  */
 
 public class YelpService {
+    public static final String TAG = YelpService.class.getSimpleName();
+
     public static void findRestaurants (String location, Callback callback) {
         OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(Constants.YELP_CONSUMER_KEY, Constants.YELP_CONSUMER_SECRET);
         consumer.setTokenWithSecret(Constants.YELP_TOKEN, Constants.YELP_TOKEN_SECRET);
@@ -33,6 +36,9 @@ public class YelpService {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new SigningInterceptor(consumer))
                 .build();
+
+        Log.v(TAG, "consumer: " + consumer);
+        Log.v(TAG, "consumer key: " + Constants.YELP_CONSUMER_KEY);
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.YELP_BASE_URL).newBuilder();
         urlBuilder.addQueryParameter(Constants.YELP_LOCATION_QUERY_PARAMETER, location);
@@ -51,7 +57,9 @@ public class YelpService {
 
         try {
             String jsonData = response.body().string();
+            Log.d(TAG, "json response data: " + jsonData);
             if (response.isSuccessful()) {
+                Log.v(TAG, "Successful response");
                 JSONObject yelpJSON = new JSONObject(jsonData);
                 JSONArray businessesJSON = yelpJSON.getJSONArray("businesses");
                 for (int i = 0; i < businessesJSON.length(); i++) {
