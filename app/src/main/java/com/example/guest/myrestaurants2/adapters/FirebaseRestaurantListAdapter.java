@@ -1,11 +1,13 @@
 package com.example.guest.myrestaurants2.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.guest.myrestaurants2.models.Restaurant;
+import com.example.guest.myrestaurants2.ui.RestaurantDetailActivity;
 import com.example.guest.myrestaurants2.util.ItemTouchHelperAdapter;
 import com.example.guest.myrestaurants2.util.OnStartDragListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -14,6 +16,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,6 +89,18 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Resta
                 return false;
             }
         });
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Just like we did previously in the ViewHolder, we create an intent, pass in the position and the ArrayList of Restaurants and then call the startActivity() method using the context passed in to our constructor.
+                Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
+//                To get the current position of the click item, we can call the getAdapterPosition() method on the ViewHolder passed into the populateViewHolder() method.
+//                Notice that the position information we're including with our intent when we say intent.putExtra("position", viewHolder.getAdapterPosition()); is an integer. Make sure the RestaurantDetailActivity is prepared to gather a position of the integer data type when it receives this intent:
+                intent.putExtra("position", viewHolder.getAdapterPosition());
+                intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
+                mContext.startActivity(intent);
+            }
+        });
     }
 
 //    onItemMove() and onItemDismiss() override methods from the ItemTouchHelperAdapter interface.
@@ -103,5 +119,25 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Resta
 //        We call the remove() method on our ArrayList of items in onItemDismiss() to remove the item from mRestaurants at the given position.
         mRestaurants.remove(position);
         getRef(position).removeValue();
+    }
+
+//    We can grab the index of each restaurant in the mRestaurants ArrayList by calling the ArrayList.indexOf() method, passing in the object which we would like to know the index. We will use this index as the index in Firebase.
+//    We grab the reference of each item using the getRef() method, passing in the position of the item in the ArrayList.
+//    We then use the setIndex() method we added to our Restaurant model to update the index property for each item.
+//    We can finally use the setValue() method passing the Restaurant object whose index property we just updated.
+    private void setIndexInFirebase() {
+        for (Restaurant restaurant : mRestaurants) {
+            int index = mRestaurants.indexOf(restaurant);
+            DatabaseReference ref = getRef(index);
+            restaurant.setIndex(Integer.toString(index));
+            ref.setValue(restaurant);
+        }
+    }
+
+    @Override
+    public void cleanup() {
+        super.cleanup();
+        setIndexInFirebase();
+        mRef.removeEventListener(mChildEventListener);
     }
 }
