@@ -11,7 +11,6 @@ import com.example.guest.myrestaurants2.R;
 import com.example.guest.myrestaurants2.adapters.FirebaseRestaurantListAdapter;
 import com.example.guest.myrestaurants2.adapters.FirebaseRestaurantViewHolder;
 import com.example.guest.myrestaurants2.models.Restaurant;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.example.guest.myrestaurants2.util.OnStartDragListener;
 import com.example.guest.myrestaurants2.util.SimpleItemTouchHelperCallback;
 import com.google.firebase.auth.FirebaseAuth;

@@ -51,13 +51,16 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Resta
     }
 
 //    onItemMove() and onItemDismiss() override methods from the ItemTouchHelperAdapter interface.
+//    We call the notifyItemMoved() method to notify our adapter that the underlying data has changed.
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
+        notifyItemMoved(fromPosition, toPosition);
         return false;
     }
 
+//    To delete the dismissed item from Firebase, we can call the getRef() method, passing in an item's position and the FirebaseRecyclerAdapter will return the DatabaseReference for the given object. We can then call the removeValue() method to delete that object from Firebase. Once deleted, the FirebaseRecyclerAdapter will automatically update the view.
     @Override
     public void onItemDismiss(int position) {
-
+        getRef(position).removeValue();
     }
 }
