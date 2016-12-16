@@ -14,8 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.guest.myrestaurants2.R;
-import com.example.guest.myrestaurants2.ui.LoginActivity;
-import com.example.guest.myrestaurants2.ui.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -36,8 +34,8 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     @Bind(R.id.emailEditText) EditText mEmailEditText;
     @Bind(R.id.passwordEditText) EditText mPasswordEditText;
     @Bind(R.id.confirmPasswordEditText) EditText mConfirmPasswordEditText;
-    @Bind(R.id.loginTextView)
-    TextView mLoginTextView;
+    @Bind(R.id.loginTextView) TextView mLoginTextView;
+
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -140,8 +138,6 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.v(TAG, "user: " + user.getEmail());
-                    Toast.makeText(CreateAccountActivity.this, "You're already logged in!",
-                            Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);

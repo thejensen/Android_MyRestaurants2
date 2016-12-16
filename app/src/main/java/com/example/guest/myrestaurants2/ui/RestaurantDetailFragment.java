@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.example.guest.myrestaurants2.Constants;
 import com.example.guest.myrestaurants2.R;
 import com.example.guest.myrestaurants2.models.Restaurant;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -104,10 +106,19 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
 //        Then, we call push() and setValue() , passing in our restaurant object as an argument, to create a node for the selected restaurant with a unique push id.
 //        Finally, we display a brief toast to confirm the restaurant has been saved.
         if (v == mSaveRestaurantButton) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String uid = user.getUid();
+
             DatabaseReference restaurantRef = FirebaseDatabase
                     .getInstance()
-                    .getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
-            restaurantRef.push().setValue(mRestaurant);
+                    .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                    .child(uid);
+
+            DatabaseReference pushRef = restaurantRef.push();
+            String pushId = pushRef.getKey();
+            mRestaurant.setPushId(pushId);
+            pushRef.setValue(mRestaurant);
+
             Toast.makeText(getContext(), "Saved", Toast.LENGTH_SHORT).show();
         }
     }
