@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Guest on 12/12/16.
@@ -90,6 +91,8 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Resta
 //    We call the notifyItemMoved() method to notify our adapter that the underlying data has changed.
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
+//        We use Collections.swap() to update the order of our mRestaurants ArrayList items passing in the ArrayList of items and the starting and ending positions.
+        Collections.swap(mRestaurants, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
         return false;
     }
@@ -97,6 +100,8 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Resta
 //    To delete the dismissed item from Firebase, we can call the getRef() method, passing in an item's position and the FirebaseRecyclerAdapter will return the DatabaseReference for the given object. We can then call the removeValue() method to delete that object from Firebase. Once deleted, the FirebaseRecyclerAdapter will automatically update the view.
     @Override
     public void onItemDismiss(int position) {
+//        We call the remove() method on our ArrayList of items in onItemDismiss() to remove the item from mRestaurants at the given position.
+        mRestaurants.remove(position);
         getRef(position).removeValue();
     }
 }
