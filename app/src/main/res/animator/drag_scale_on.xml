@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--Here, you may notice some familiar terms: scaleX, scaleY, alpha and duration all refer to the same values as they did in the programmatic approach; here we're simply setting these values with XML instead. Additionally, the <set> tags refer to the AnimatorSet class, which is responsible for playing animations.-->
+    <set xmlns:android="http://schemas.android.com/apk/res/android">
+    <objectAnimator
+        android:propertyName="scaleX"
+        android:valueTo="0.9f"
+        android:duration="500" />
+    <objectAnimator
+        android:propertyName="scaleY"
+        android:valueTo="0.9f"
+        android:duration="500" />
+    <objectAnimator
+        android:propertyName="alpha"
+        android:valueTo="0.7f"
+        android:duration="500" />
+</set>
