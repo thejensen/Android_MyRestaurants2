@@ -2,12 +2,17 @@ package com.example.guest.myrestaurants2.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.guest.myrestaurants2.R;
 import com.example.guest.myrestaurants2.models.Restaurant;
 import com.example.guest.myrestaurants2.ui.RestaurantDetailActivity;
+import com.example.guest.myrestaurants2.ui.RestaurantDetailFragment;
 import com.example.guest.myrestaurants2.util.ItemTouchHelperAdapter;
 import com.example.guest.myrestaurants2.util.OnStartDragListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -36,6 +41,7 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Resta
     private Context mContext;
     private ChildEventListener mChildEventListener;
     private ArrayList<Restaurant> mRestaurants = new ArrayList<>();
+    private int mOrientation;
 
     //    We also add the OnStartDragListener and the context to the constructor. The context will be needed when we eventually create an intent to navigate to the detail activity.
     public FirebaseRestaurantListAdapter(Class<Restaurant> modelClass, int modelLayout, Class<FirebaseRestaurantViewHolder> viewHolderClass, Query ref, OnStartDragListener onStartDragListener, Context context) {
@@ -80,6 +86,12 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Resta
     @Override
     protected void populateViewHolder(final FirebaseRestaurantViewHolder viewHolder, Restaurant model, int position) {
         viewHolder.bindRestaurant(model);
+
+        mOrientation = viewHolder.itemView.getResources().getConfiguration().orientation;
+        if (mOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            createDetailFragment(0);
+        }
+
         viewHolder.mRestaurantImageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -92,15 +104,31 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Resta
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int itemPosition = viewHolder.getAdapterPosition();
+                if (mOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    createDetailFragment(itemPosition);
+                } else {
 //                Just like we did previously in the ViewHolder, we create an intent, pass in the position and the ArrayList of Restaurants and then call the startActivity() method using the context passed in to our constructor.
-                Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
+                    Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
 //                To get the current position of the click item, we can call the getAdapterPosition() method on the ViewHolder passed into the populateViewHolder() method.
 //                Notice that the position information we're including with our intent when we say intent.putExtra("position", viewHolder.getAdapterPosition()); is an integer. Make sure the RestaurantDetailActivity is prepared to gather a position of the integer data type when it receives this intent:
-                intent.putExtra("position", viewHolder.getAdapterPosition());
-                intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
-                mContext.startActivity(intent);
+                    intent.putExtra("position", viewHolder.getAdapterPosition());
+                    intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
+                    mContext.startActivity(intent);
+                }
             }
         });
+    }
+
+    private void createDetailFragment(int position) {
+        // Creates new RestaurantDetailFragment with the given position:
+        RestaurantDetailFragment detailFragment = RestaurantDetailFragment.newInstance(mRestaurants, position);
+        // Gathers necessary components to replace the FrameLayout in the layout with the RestaurantDetailFragment:
+        FragmentTransaction ft = ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction();
+        //  Replaces the FrameLayout with the RestaurantDetailFragment:
+        ft.replace(R.id.restaurantDetailContainer, detailFragment);
+        // Commits these changes:
+        ft.commit();
     }
 
 //    onItemMove() and onItemDismiss() override methods from the ItemTouchHelperAdapter interface.
