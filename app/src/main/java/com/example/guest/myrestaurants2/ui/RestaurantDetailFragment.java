@@ -23,6 +23,8 @@ import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -39,12 +41,18 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     @Bind(R.id.saveRestaurantButton) TextView mSaveRestaurantButton;
 
     private Restaurant mRestaurant;
+    private ArrayList<Restaurant> mRestaurants;
+    private int mPosition;
 
-//    This method is used instead of a constructor and returns a new instance of RestaurantDetailFragment. The Parcelor library adds the Restaurant object to a bundle and set the bundle as the argument for our new RestaurantDetail Fragment. This allows us to access necessary data when a new instance of our fragment is created.
-    public static RestaurantDetailFragment newInstance(Restaurant restaurant) {
+    //    This method is used instead of a constructor and returns a new instance of RestaurantDetailFragment. The Parcelor library adds the Restaurant object to a bundle and set the bundle as the argument for our new RestaurantDetail Fragment. This allows us to access necessary data when a new instance of our fragment is created.
+    public static RestaurantDetailFragment newInstance(ArrayList<Restaurant> restaurants, Integer position) {
         RestaurantDetailFragment restaurantDetailFragment = new RestaurantDetailFragment();
         Bundle args = new Bundle();
-        args.putParcelable("restaurant", Parcels.wrap(restaurant));
+
+
+        args.putParcelable(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(restaurants));
+        args.putInt(Constants.EXTRA_KEY_POSITION, position);
+
         restaurantDetailFragment.setArguments(args);
         return restaurantDetailFragment;
     }
@@ -53,7 +61,12 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRestaurant = Parcels.unwrap(getArguments().getParcelable("restaurant"));
+//        First, we retrieve the parceled mRestaurants from the parameters we passed into newInstance() by utilizing the key in our Constants class.
+        mRestaurants = Parcels.unwrap(getArguments().getParcelable(Constants.EXTRA_KEY_RESTAURANTS));
+//        Next, we retrieve the mPosition variable, which represents the specific position of the restaurant we'd like to display.
+        mPosition = getArguments().getInt(Constants.EXTRA_KEY_POSITION);
+//        We get the specific restaurant at the position indicated, and define it as mRestaurant. mRestaurant is then used later on in onCreateView() and when we assign our click listeners. We don't need to make any further changes to that logic.
+        mRestaurant = mRestaurants.get(mPosition);
     }
 
 //    the restaurant object is used to set our ImageView and TextViews.

@@ -21,7 +21,7 @@ public class RestaurantPagerAdapter extends FragmentPagerAdapter {
 //      returns an instance of the RestaurantDetailFragment for the restaurant in the position provided as an argument.
     @Override
     public Fragment getItem(int position) {
-        return RestaurantDetailFragment.newInstance(mRestaurants.get(position));
+        return RestaurantDetailFragment.newInstance(mRestaurants, position);
     }
 
 //    determines how many restaurants are in our arraylist. This lets our adapter know how many fragments it must create.
@@ -35,4 +35,5 @@ public class RestaurantPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return mRestaurants.get(position).getName();
     }
+
 }
